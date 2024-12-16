@@ -1,5 +1,7 @@
 package org.example.spring_boot
 
+import ch.qos.logback.core.model.Model
+import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -67,5 +69,18 @@ class TourController(
         @PathVariable tourId: Long
     ): Tour? {
         return tourService.bookTour(clientId, tourId)
+    }
+}
+
+@Controller
+class WebController {
+    @GetMapping("/")
+    fun index(model: Model): String {
+        return "index"
+    }
+
+    @GetMapping("/book-tour")
+    fun bookTourPage(model: Model): String {
+        return "book-tour"
     }
 }

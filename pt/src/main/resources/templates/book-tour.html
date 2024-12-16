@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Tour</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Book a Tour</h1>
+</header>
+
+<div class="container">
+    <div class="form-container">
+        <h2>Select a Client and Tour</h2>
+        <form id="book-tour-form">
+            <label for="client">Select Client:</label>
+            <select id="client" name="clientId" required>
+                <option value="" disabled selected>Select a Client</option>
+            </select>
+
+            <label for="tour">Select Tour:</label>
+            <select id="tour" name="tourId" required>
+                <option value="" disabled selected>Select a Tour</option>
+            </select>
+
+            <button type="submit">Book Tour</button>
+        </form>
+    </div>
+
+    <a href="/">Back to Home</a>
+</div>
+
+<script>
+    function loadClients() {
+        fetch('/clients')
+            .then(response => response.json())
+            .then(data => {
+                const clientSelect = document.getElementById('client');
+                data.forEach(client => {
+                    const option = document.createElement('option');
+                    option.value = client.clientID;
+                    option.textContent = client.name_of_a_client;
+                    clientSelect.appendChild(option);
+                });
+            });
+    }
+
+    function loadTours() {
+        fetch('/tours')
+            .then(response => response.json())
+            .then(data => {
+                const tourSelect = document.getElementById('tour');
+                data.forEach(tour => {
+                    if (tour.availability) {
+                        const option = document.createElement('option');
+                        option.value = tour.tour_id;
+                        option.textContent = `${tour.destination} - $${tour.price}`;
+                        tourSelect.appendChild(option);
+                    }
+                });
+            });
+    }
+
+    document.getElementById('book-tour-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const clientId = formData.get('clientId');
+        const tourId = formData.get('tourId');
+
+        fetch(`/tours/book/${clientId}/${tourId}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Tour booked successfully!');
+            window.location.href = '/'; // Redirect to home page after booking
+        })
+        .catch(error => {
+            alert('Error booking tour: ' + error.message);
+        });
+    });
+
+    loadClients();
+    loadTours();
+</script>
+</body>
+</html>

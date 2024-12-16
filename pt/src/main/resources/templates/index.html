@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Booking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #333;
+        }
+        .tour-list, .client-list {
+            list-style: none;
+            padding: 0;
+        }
+        .tour-list li, .client-list li {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .tour-list li a, .client-list li a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Tour Booking System</h1>
+</header>
+
+<div class="container">
+    <div class="section">
+        <h2>Available Tours</h2>
+        <ul class="tour-list" id="tour-list">
+            <!-- Сюда будут динамически добавляться туры -->
+        </ul>
+        <button onclick="loadTours()">Load Tours</button>
+    </div>
+
+    <div class="section">
+        <h2>Existing Clients</h2>
+        <ul class="client-list" id="client-list">
+            <!-- Сюда будут динамически добавляться клиенты -->
+        </ul>
+        <button onclick="loadClients()">Load Clients</button>
+    </div>
+
+    <div class="section form-container">
+        <h2>Create New User</h2>
+        <form id="create-client-form">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="phone" placeholder="Phone" required>
+            <button type="submit">Create User</button>
+        </form>
+    </div>
+
+    <div class="section form-container">
+        <h2>Create New Tour</h2>
+        <form id="create-tour-form">
+            <input type="text" name="destination" placeholder="Destination" required>
+            <input type="number" name="price" placeholder="Price" required>
+            <input type="checkbox" name="availability" checked> Available
+            <button type="submit">Create Tour</button>
+        </form>
+    </div>
+
+    <a href="/book-tour">Go to Book a Tour</a>
+</div>
+
+<script>
+    function loadTours() {
+        fetch('/tours')
+            .then(response => response.json())
+            .then(data => {
+                const tourList = document.getElementById('tour-list');
+                tourList.innerHTML = '';  // очистить список перед добавлением новых данных
+                data.forEach(tour => {
+                    const li = document.createElement('li');
+                    li.textContent = `${tour.destination} - $${tour.price} - ${tour.availability ? 'Available' : 'Not Available'}`;
+                    tourList.appendChild(li);
+                });
+            });
+    }
+
+    function loadClients() {
+        fetch('/clients')
+            .then(response => response.json())
+            .then(data => {
+                const clientList = document.getElementById('client-list');
+                clientList.innerHTML = '';  // очистить список перед добавлением новых данных
+                data.forEach(client => {
+                    const li = document.createElement('li');
+                    li.textContent = `${client.name_of_a_client} - ${client.email}`;
+                    clientList.appendChild(li);
+                });
+            });
+    }
+
+    document.getElementById('create-client-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const clientData = {
+            name_of_a_client: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone')
+        };
+
+        fetch('/clients', {
+            method: 'POST',
+            body: JSON.stringify(clientData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(() => loadClients());
+    });
+
+    document.getElementById('create-tour-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const tourData = {
+            destination: formData.get('destination'),
+            price: parseFloat(formData.get('price')),
+            availability: formData.get('availability') === 'on'
+        };
+
+        fetch('/tours', {
+            method: 'POST',
+            body: JSON.stringify(tourData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(() => loadTours());
+    });
+</script>
+</body>
+</html>
