@@ -62,6 +62,31 @@
         button:hover {
             background-color: #45a049;
         }
+        .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 5px;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        background-color: #4CAF50; /* Зеленый цвет кнопки */
+        border: none;
+        border-radius: 5px;
+        text-decoration: none; /* Убираем подчеркивание */
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+        background-color: #45a049; /* Более темный зеленый цвет на hover */
+        transform: scale(1.05); /* Легкое увеличение на hover */
+    }
+
+    .btn:active {
+        background-color: #3e8e41; /* Цвет при нажатии */
+        transform: scale(0.95); /* Легкое уменьшение при нажатии */
+    }
     </style>
 </head>
 <body>
@@ -71,7 +96,7 @@
 
 <div class="container">
     <div class="section">
-        <h2>Available Tours</h2>
+        <h2>Tours</h2>
         <ul class="tour-list" id="tour-list">
             <!-- Сюда будут динамически добавляться туры -->
         </ul>
@@ -101,12 +126,13 @@
         <form id="create-tour-form">
             <input type="text" name="destination" placeholder="Destination" required>
             <input type="number" name="price" placeholder="Price" required>
-            <input type="checkbox" name="availability" checked> Available
+            <input type="number" name="availability" placeholder="Number of Spots" required>
             <button type="submit">Create Tour</button>
         </form>
     </div>
 
-    <a href="/book-tour">Go to Book a Tour</a>
+    <a href="/book-tour" class="btn">Go to Book a Tour</a>
+    <a href="/tour-client-view" class="btn">View Client-Tour Info</a>
 </div>
 
 <script>
@@ -115,10 +141,10 @@
             .then(response => response.json())
             .then(data => {
                 const tourList = document.getElementById('tour-list');
-                tourList.innerHTML = '';  // очистить список перед добавлением новых данных
+                tourList.innerHTML = ''; // очистить список перед добавлением новых данных
                 data.forEach(tour => {
                     const li = document.createElement('li');
-                    li.textContent = `${tour.destination} - $${tour.price} - ${tour.availability ? 'Available' : 'Not Available'}`;
+                    li.textContent = `${tour.destination} - $${tour.price} - Spots Left: ${tour.availability}`;
                     tourList.appendChild(li);
                 });
             });
@@ -164,7 +190,7 @@
         const tourData = {
             destination: formData.get('destination'),
             price: parseFloat(formData.get('price')),
-            availability: formData.get('availability') === 'on'
+            availability: parseInt(formData.get('availability'), 10)
         };
 
         fetch('/tours', {

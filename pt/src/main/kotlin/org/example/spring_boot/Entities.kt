@@ -24,6 +24,6 @@ data class Tour(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val tour_id: Long? = null,
     var price: Double,
     var destination: String,
-    var availability: Boolean
+    var availability: Int
 )
 

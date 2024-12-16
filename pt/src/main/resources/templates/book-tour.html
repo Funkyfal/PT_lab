@@ -47,6 +47,31 @@
             margin-top: 20px;
             display: inline-block;
         }
+        .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 5px;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        background-color: #4CAF50; /* Зеленый цвет кнопки */
+        border: none;
+        border-radius: 5px;
+        text-decoration: none; /* Убираем подчеркивание */
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+        background-color: #45a049; /* Более темный зеленый цвет на hover */
+        transform: scale(1.05); /* Легкое увеличение на hover */
+    }
+
+    .btn:active {
+        background-color: #3e8e41; /* Цвет при нажатии */
+        transform: scale(0.95); /* Легкое уменьшение при нажатии */
+    }
     </style>
 </head>
 <body>
@@ -72,7 +97,8 @@
         </form>
     </div>
 
-    <a href="/">Back to Home</a>
+    <a href="/" class="btn">Back to Home</a>
+    <a href="/tour-client-view" class="btn">View Client-Tour Info</a>
 </div>
 
 <script>

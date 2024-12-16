@@ -33,6 +33,12 @@ class ClientController(
     fun getClientTours(@PathVariable id: Long?): List<Tour> {
         return clientService.getClientTours(id)
     }
+
+    @GetMapping("/{clientId}/booked-tours")
+    fun getBookedToursByClient(@PathVariable clientId: Long): List<Tour> {
+        return clientService.getClientTours(clientId)
+    }
+
 }
 
 @RestController
@@ -70,6 +76,12 @@ class TourController(
     ): Tour? {
         return tourService.bookTour(clientId, tourId)
     }
+
+    @GetMapping("/{tourId}/clients")
+    fun getClientsByTour(@PathVariable tourId: Long): List<Client> {
+        return tourService.getClientsByTour(tourId)
+    }
+
 }
 
 @Controller
@@ -83,4 +95,10 @@ class WebController {
     fun bookTourPage(model: Model): String {
         return "book-tour"
     }
+
+    @GetMapping("/tour-client-view")
+    fun tourClientView(model: Model): String {
+        return "tour-client-view"
+    }
+
 }
