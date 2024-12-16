@@ -75,8 +75,9 @@ class TourService(
         val client = clientRepository.findByIdOrNull(clientId)
         val tour = tourRepository.findByIdOrNull(tourId)
 
-        return if (client != null && tour != null) {
+        return if (client != null && tour != null && tour.availability) {
             val updatedTour = tour.copy(client = client)
+            updatedTour.availability = false
             tourRepository.save(updatedTour)
         } else {
             null

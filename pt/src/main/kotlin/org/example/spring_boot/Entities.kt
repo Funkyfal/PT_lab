@@ -9,7 +9,7 @@ data class Client(
     var name_of_a_client: String,
     var email: String,
     var phone: String,
-    @Id @GeneratedValue var clientID: Long? = null
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var clientID: Long? = null
 ){
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "client")
     @JsonIgnore
@@ -21,7 +21,7 @@ data class Tour(
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "clientid")
     val client: Client? = null,
-    @Id @GeneratedValue val tour_id: Long? = null,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val tour_id: Long? = null,
     var price: Double,
     var destination: String,
     var availability: Boolean
