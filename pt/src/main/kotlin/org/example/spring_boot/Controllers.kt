@@ -43,8 +43,29 @@ class TourController(
         return tourService.getAllTours()
     }
 
-    @PostMapping("/client/{clientId}")
-    fun createTour(@PathVariable clientId: Long, @RequestBody tour: Tour): Tour? {
-        return tourService.createTour(clientId, tour)
+    @GetMapping("/{id}")
+    fun getTourByID(@PathVariable id: Long?): Tour? {
+        return tourService.getTourByID(id)
+    }
+
+    @PostMapping
+    fun createTour(@RequestBody tour: Tour): Tour {
+        return tourService.createTour(tour)
+    }
+
+    @PutMapping("/{tourId}")
+    fun updateTour(
+        @PathVariable tourId: Long,
+        @RequestBody updatedTour: Tour
+    ): Tour? {
+        return tourService.updateTour(tourId, updatedTour)
+    }
+
+    @PostMapping("/book/{clientId}/{tourId}")
+    fun bookTour(
+        @PathVariable clientId: Long,
+        @PathVariable tourId: Long
+    ): Tour? {
+        return tourService.bookTour(clientId, tourId)
     }
 }

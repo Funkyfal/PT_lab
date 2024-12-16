@@ -18,7 +18,7 @@ data class Client(
 
 @Entity
 data class Tour(
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "clientid")
     val client: Client? = null,
     @Id @GeneratedValue val tour_id: Long? = null,

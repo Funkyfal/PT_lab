@@ -3,6 +3,7 @@ package org.example.spring_boot
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
+//сделать availability
 @Service
 class ClientService(
     private val clientRepository: ClientRepository
@@ -48,15 +49,37 @@ class TourService(
         return tourRepository.findAll()
     }
 
-    fun createTour(clientId: Long, tour: Tour): Tour? {
-        val client = clientRepository.findByIdOrNull(clientId)
-        return if (client != null) {
-            val newTour = tour.copy(client = client) // Привязываем клиента к туру
-            tourRepository.save(newTour)
+    fun getTourByID(id: Long?): Tour? {
+        return tourRepository.findByIdOrNull(id)
+    }
 
+    fun createTour(tour: Tour): Tour {
+        return tourRepository.save(tour)
+    }
+
+    fun updateTour(tourId: Long, updatedTour: Tour): Tour? {
+        val tour = tourRepository.findByIdOrNull(tourId)
+        return if (tour != null) {
+            val updated = tour.copy(
+                destination = updatedTour.destination,
+                price = updatedTour.price,
+                availability = updatedTour.availability
+            )
+            tourRepository.save(updated)
         } else {
-            null // Клиент с таким ID не найден
+            null
         }
     }
 
+    fun bookTour(clientId: Long, tourId: Long): Tour? {
+        val client = clientRepository.findByIdOrNull(clientId)
+        val tour = tourRepository.findByIdOrNull(tourId)
+
+        return if (client != null && tour != null) {
+            val updatedTour = tour.copy(client = client)
+            tourRepository.save(updatedTour)
+        } else {
+            null
+        }
+    }
 }
